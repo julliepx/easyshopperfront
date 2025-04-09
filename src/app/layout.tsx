@@ -4,6 +4,7 @@ import "./globals.css";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/navbar/Navbar";
+import { Toaster } from "react-hot-toast";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
           <Navbar />
           {children}
         </QueryProvider>
+        <Toaster position="top-right" />
       </body>
     </html>
   );
