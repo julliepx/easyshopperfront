@@ -5,9 +5,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema, type RegisterFormData } from "@/schemas/auth";
+import { FormField } from "@/components/formfield/FormField";
+import toast from "react-hot-toast";
 
 export default function RegisterPage() {
-  const { register: registerUser, isRegistering, registerError } = useAuth();
+  const { register: registerUser, isRegistering } = useAuth();
 
   const {
     register,
@@ -18,7 +20,12 @@ export default function RegisterPage() {
   });
 
   const onSubmit = (data: RegisterFormData) => {
-    registerUser(data);
+    try {
+      registerUser(data);
+      toast.success("Account created successfully!");
+    } catch (error) {
+      toast.error("Failed to create account. Please try again.");
+    }
   };
 
   return (
@@ -41,82 +48,32 @@ export default function RegisterPage() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Full name
-              </label>
-              <div className="mt-1">
-                <input
-                  id="name"
-                  type="text"
-                  autoComplete="name"
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  {...register("name")}
-                />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.name.message}
-                  </p>
-                )}
-              </div>
-            </div>
+            <FormField label="Full name" error={errors.name?.message}>
+              <input
+                type="text"
+                autoComplete="name"
+                className="w-full px-4 py-2 bg-gray-50 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                {...register("name")}
+              />
+            </FormField>
 
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email address
-              </label>
-              <div className="mt-1">
-                <input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  {...register("email")}
-                />
-                {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-            </div>
+            <FormField label="Email address" error={errors.email?.message}>
+              <input
+                type="email"
+                autoComplete="email"
+                className="w-full px-4 py-2 bg-gray-50 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                {...register("email")}
+              />
+            </FormField>
 
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-              <div className="mt-1">
-                <input
-                  id="password"
-                  type="password"
-                  autoComplete="new-password"
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  {...register("password")}
-                />
-                {errors.password && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {registerError && (
-              <div className="text-red-600 text-sm">
-                {registerError instanceof Error
-                  ? registerError.message
-                  : "An error occurred during registration"}
-              </div>
-            )}
+            <FormField label="Password" error={errors.password?.message}>
+              <input
+                type="password"
+                autoComplete="new-password"
+                className="w-full px-4 py-2 bg-gray-50 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                {...register("password")}
+              />
+            </FormField>
 
             <div>
               <button
